@@ -12,13 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Homework provider',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider<ColorProvider>.value(value: ColorProvider()),
+          ChangeNotifierProvider<ColorsProvider>.value(value: ColorsProvider()),
           ChangeNotifierProvider<SwitchProvider>.value(value: SwitchProvider()),
         ],
         child: HomeworkPage(),
@@ -32,14 +28,18 @@ class HomeworkPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _value = false;
+    ColorsProvider state = Provider.of<ColorsProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Homework provider',
+          style: TextStyle(
+            color: state.colorTextValue,
+          ),
         ),
         centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(
@@ -59,12 +59,12 @@ class ColorSquareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorProvider state = Provider.of<ColorProvider>(context);
+    ColorsProvider state = Provider.of<ColorsProvider>(context);
 
     return AnimatedContainer(
       width: 240.0,
       height: 240.0,
-      color: state.colorValue,
+      color: state.colorSquareValue,
       duration: const Duration(seconds: 1),
       curve: Curves.linear,
     );
@@ -77,22 +77,34 @@ class ToggleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SwitchProvider state = Provider.of<SwitchProvider>(context);
+    ColorsProvider colorState = Provider.of<ColorsProvider>(context);
     return Switch(
       value: state.switchValue,
       onChanged: (bool value) {
+        colorState._randomColor();
         state._toggleValue(value);
       },
     );
   }
 }
 
-class ColorProvider extends ChangeNotifier {
-  Color _color = Colors.blue;
-  Color get colorValue => _color;
+class ColorsProvider extends ChangeNotifier {
+  Color _colorText = Colors.blue;
+  Color get colorTextValue => _colorText;
+
+  Color _colorSquare = Colors.green;
+  Color get colorSquareValue => _colorSquare;
   final max = 255;
 
   void _randomColor() {
-    _color = Color.fromARGB(
+    _colorText = Color.fromARGB(
+      max,
+      Random().nextInt(max),
+      Random().nextInt(max),
+      Random().nextInt(max),
+    );
+
+    _colorSquare = Color.fromARGB(
       max,
       Random().nextInt(max),
       Random().nextInt(max),
