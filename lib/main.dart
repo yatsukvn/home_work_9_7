@@ -1,7 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:home_work_9_7/providers/color_provider.dart';
+import 'package:home_work_9_7/providers/switch_provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<ColorsProvider>.value(value: ColorsProvider()),
           ChangeNotifierProvider<SwitchProvider>.value(value: SwitchProvider()),
         ],
-        child: HomeworkPage(),
+        child: const HomeworkPage(),
       ),
     );
   }
@@ -81,45 +81,9 @@ class ToggleWidget extends StatelessWidget {
     return Switch(
       value: state.switchValue,
       onChanged: (bool value) {
-        colorState._randomColor();
-        state._toggleValue(value);
+        colorState.randomColor();
+        state.toggleValue(value);
       },
     );
-  }
-}
-
-class ColorsProvider extends ChangeNotifier {
-  Color _colorText = Colors.blue;
-  Color get colorTextValue => _colorText;
-
-  Color _colorSquare = Colors.green;
-  Color get colorSquareValue => _colorSquare;
-  final max = 255;
-
-  void _randomColor() {
-    _colorText = Color.fromARGB(
-      max,
-      Random().nextInt(max),
-      Random().nextInt(max),
-      Random().nextInt(max),
-    );
-
-    _colorSquare = Color.fromARGB(
-      max,
-      Random().nextInt(max),
-      Random().nextInt(max),
-      Random().nextInt(max),
-    );
-    notifyListeners();
-  }
-}
-
-class SwitchProvider extends ChangeNotifier {
-  bool _value = false;
-  bool get switchValue => _value;
-
-  void _toggleValue(bool newValue) {
-    _value = newValue;
-    notifyListeners();
   }
 }
